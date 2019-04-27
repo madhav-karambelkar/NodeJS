@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const bodyParser = require('body-parser');
 var User = require('../models/user');
-
+const cors = require('./cors');
 var passport = require('passport');
 var authenticate = require('../authenticate');
 
@@ -10,7 +10,8 @@ router.use(bodyParser.json());
 
 /* GET users listing. */
 router.route('/')
-  .get(authenticate.verifyUser,authenticate.verifyAdmin,function(req, res, next) {
+  .options(cors.cordWithOptions , (req , res) => {res.statusCode(200);})
+  .get( cors.cors , authenticate.verifyUser,authenticate.verifyAdmin,function(req, res, next) {
     User.find({})
       .then((users) => {
           res.statusCode = 200;
